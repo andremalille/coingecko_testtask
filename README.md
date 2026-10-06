@@ -65,6 +65,22 @@ npm run dev                   # http://localhost:5173
 
 The result is cached in memory (default 5 minutes).
 
+## `preview_listing` rule and UI checkbox
+
+The task rule `preview_listing == true` is enforced **by default**.
+
+In my test (top 1,000 coins), about 146 coins passed the other market-level filters, but none of the 10 I sampled had `preview_listing` set. The rule is very restrictive.
+
+To keep the rest of the pipeline testable, I added an optional switch:
+
+- API: `GET /api/projects?require_preview=false` skips only this rule.
+- UI: the checkbox "Only coins with preview_listing = true" is ticked by default. Unticking it sends `require_preview=false`.
+
+### Limitations
+
+- Free CoinGecko plans are rate limited, so the first load can take several minutes. Results are then cached in memory.
+- Only the top `MAX_MARKET_PAGES * 250` coins are scanned.
+
 ## Assumptions
 
 - Only the top `MAX_MARKET_PAGES * 250` coins by market cap are scanned (default 1,000),
